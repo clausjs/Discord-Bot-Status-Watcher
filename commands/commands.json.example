@@ -1,0 +1,52 @@
+[
+    {
+        "name": "watchbot",
+        "description": "Adds a bot to the Status Watcher's list of bots to watch.",
+        "type": 1,
+        "options": [
+            {
+                "name": "bot",
+                "description": "The bot to add to the watcher list.",
+                "type": 9,
+                "required": true
+            },
+            {
+                "name": "ttr",
+                "description": "Amount of time a bot should be offline before it is considered down. (in minutes. Default: 5)",
+                "type": 10,
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "unwatchbot",
+        "description": "Remove a bot from the Status Watcher's list of bots to watch.",
+        "type": 1,
+        "options": [
+            {
+                "name": "bot",
+                "description": "The bot to remove from the watcher list.",
+                "type": 9,
+                "required": true
+            }
+        ]
+    },
+    {
+        "name": "setchannel",
+        "description": "Set the channel where the Status Watcher will send its messages.",
+        "type": 1,
+        "options": [
+            {
+                "name": "channel",
+                "description": "The channel to send the messages to.",
+                "type": 7,
+                "required": true
+            }
+        ]
+    },
+    {
+        "name": "list",
+        "description": "List all bots being watched by the Status Watcher.",
+        "type": 1
+    }
+]
