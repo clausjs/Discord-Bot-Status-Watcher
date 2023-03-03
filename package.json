@@ -4,7 +4,7 @@
   "description": "A discord bot to watch online statuses of other bots and report when they go down",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "start": "npx tsc && node dist/index.js"
   },
   "repository": {
     "type": "git",
