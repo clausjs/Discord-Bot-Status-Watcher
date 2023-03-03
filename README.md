@@ -43,8 +43,6 @@ Discord Bot Watcher will invoke the default function in `./commands/watchbot.js`
 
 Once the commands have been entered the application will also remove commands.json so that the next startup does not try to create new commands with the same names.
 
-**NOTE: The bot does not currently have a path to edit already entered commands**
-
 # How to run
 Once the application is configured following the steps above, you're ready to spin up the bot!
 ```
@@ -57,7 +55,7 @@ npm run start
 ```
 to run the application
 
-#Timezone support
+# Timezone support
 
 If time reporting is required in a specific timezone you can set the `TIMEZONE_CODE` in your .env to the appropriate timezone code used by moment-timezone.js. [Timezone Identifier](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) 
 
