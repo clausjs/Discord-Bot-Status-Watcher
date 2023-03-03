@@ -101,6 +101,7 @@ export class Watchers {
                 await db.updateBotLastSeen(presence.user.id);
             } else if (presence.status === "online") {
                 this.stopTimer(botInfo);
+                await db.clearBotLastSeen(presence.user.id);
             }
         }
     }

@@ -106,6 +106,16 @@ export class Database extends EventEmitter {
         return false;
     }
 
+    public clearBotLastSeen = async (id: string): Promise<boolean> => {
+        const res: UpdateResult = await this.botCollection.updateOne({ bot_id: id }, { $unset: { lastSeen: "" } });
+        if (res.acknowledged) {
+            this.bots = await this.getAllBots();
+            return true;
+        }
+
+        return false;
+    }
+
     public addChannel = async (id: string, guild: string): Promise<boolean> => {
         const res: ModifyResult<Channel> = await this.channelCollection.findOneAndUpdate({ guild }, { $set: { channel_id: id }, $setOnInsert: { disableAlerts: false } }, { upsert: true });
         if (res.ok === 1) {
