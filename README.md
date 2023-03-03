@@ -1,5 +1,5 @@
 # discord_bot
-A discord bot for messing around with discord bots
+A discord bot to watch online statuses of other bots and report when they go down
 
 # First steps
 1. Create a `.env` file in your repo directory (or the directory the application will run from).
