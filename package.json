@@ -1,0 +1,30 @@
+{
+  "name": "discord-bot-status-watcher",
+  "version": "1.0.0",
+  "description": "A discord bot to watch online statuses of other bots and report when they go down",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clausjs/Discord-Bot-Status-Watcher.git"
+  },
+  "author": "Joseph Claus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/clausjs/Discord-Bot-Status-Watcher/issues"
+  },
+  "homepage": "https://github.com/clausjs/Discord-Bot-Status-Watcher#readme",
+  "dependencies": {
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.41",
+    "mongodb": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.14.2",
+    "typescript": "^4.9.5"
+  }
+}
