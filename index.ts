@@ -1,9 +1,8 @@
 import { config } from "dotenv";
 const dotenv = config();
-import { Client, User } from "discord.js";
+import { ApplicationCommand, Client, GatewayIntentBits, User } from "discord.js";
 import { getDatabaseInstance } from "./database";
-import { IntentStrings } from "./intents";
-import Watchers from "./Watchers";
+import { default as getInstance, Watchers } from "./Watchers";
 const fs = require('fs');
 const path = require('path');
 const commands = require('./commands');
@@ -18,10 +17,14 @@ if (dotenv.error) {
   }
 
 if (!process.env.DISCORD_TOKEN) throw new Error("Cannot start bot. Missing environment variable \"DISCORD_TOKEN\".");
-const BotWatcher = new Client({ intents: IntentStrings });
+const BotWatcher = new Client({ intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.MessageContent 
+]});
 
 db.on('ready', () => {
-    watchers = new Watchers(BotWatcher, db.bots, db.channels);
+    watchers = getInstance(BotWatcher, db.bots, db.channels);
 });
 
 process.on('SIGINT', () => {
@@ -50,8 +53,14 @@ function main() {
             commandDefs.map(async (command: any) => {
                 tasks.push(new Promise(async (resolve, reject) => {
                     try {
-                        await BotWatcher.application?.commands.create(command);
-                        console.log("successfully added command: ", command);
+                        const discordCommand: ApplicationCommand | undefined = BotWatcher.application?.commands.cache.find(c => c.name === command.name);
+                        if (discordCommand) {
+                            await BotWatcher.application?.commands.edit(discordCommand.id, command);
+                            console.log("successfully updated command: ", command);
+                        } else {
+                            await BotWatcher.application?.commands.create(command);
+                            console.log("successfully added command: ", command);
+                        }
                         resolve();
                     } catch (err) {
                         console.error("Error adding command: ", err);
@@ -82,7 +91,7 @@ function main() {
         if (!interaction.isCommand()) return;
 
         const command = interaction.commandName;
-        if (commands[command]) commands[command](interaction);
+        if (commands[command]) commands[command](interaction, watchers);
     });
 }
 

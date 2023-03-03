@@ -2,6 +2,7 @@ export interface Bot {
     name: string;
     bot_id: string;
     options?: BotOptions;
+    lastSeen?: Date;
 }
 
 export interface BotOptions {

@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { MongoClient, Db, Collection, WithId, OptionalId, ModifyResult } from 'mongodb'
+import { MongoClient, Db, Collection, WithId, OptionalId, ModifyResult, DeleteResult, UpdateResult } from 'mongodb'
 import { Bot, BotOptions, Channel } from '../types';
 
 // Connection URL
@@ -75,12 +75,35 @@ export class Database extends EventEmitter {
         if (channels) return channels;
     }
 
-    public insertNewBot = async (name: string, id: string, options?: BotOptions): Promise<void> => {
-        const insertOptions: OptionalId<Bot> = { name, bot_id: id };
-        if (options) insertOptions.options = options;
-        else insertOptions.options = { timeToReport: 5 };
-        await this.botCollection.insertOne(insertOptions);
-        this.bots = await this.getAllBots();
+    public getBotLastSeen = async (id: string): Promise<Date | undefined> => {
+        const bot: Bot | undefined = await this.getBotById(id);
+        if (bot) return bot.lastSeen;
+    }
+
+    /**
+     * 
+     * @param name 
+     * @param id 
+     * @param options 
+     * @returns true if bot already exists, false if bot was inserted. Undefined if error.
+     */
+    public insertNewBotIfNotExists = async (name: string, id: string, options?: BotOptions): Promise<boolean | undefined> => {
+        const res: ModifyResult<Bot> = await this.botCollection.findOneAndUpdate({ bot_id: id }, { $set: { name, options } }, { upsert: true });
+        if (res.ok === 1) {
+            this.bots = await this.getAllBots();
+        } else throw new Error(res.lastErrorObject?.err);
+
+        return res.lastErrorObject?.updatedExisting as boolean;
+    }
+
+    public updateBotLastSeen = async (id: string): Promise<boolean> => {
+        const res: UpdateResult = await this.botCollection.updateOne({ bot_id: id }, { $set: { lastSeen: new Date() } });
+        if (res.acknowledged) {
+            this.bots = await this.getAllBots();
+            return true;
+        }
+
+        return false;
     }
 
     public addChannel = async (id: string, guild: string): Promise<boolean> => {
@@ -92,9 +115,11 @@ export class Database extends EventEmitter {
         return res.lastErrorObject?.updatedExisting as boolean;
     }
 
-    public removeBot = async (id: string): Promise<void> => {
-        await this.botCollection.deleteOne({ bot_id: id });
+    public removeBot = async (id: string): Promise<boolean> => {
+        const res: DeleteResult = await this.botCollection.deleteOne({ bot_id: id });
         this.bots = await this.getAllBots();
+        if (res.deletedCount === 0) return false;
+        return true;
     }
 
     public close(): void {

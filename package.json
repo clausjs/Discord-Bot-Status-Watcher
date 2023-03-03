@@ -19,6 +19,8 @@
   "dependencies": {
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.41",
     "mongodb": "^5.1.0"
   },
   "devDependencies": {

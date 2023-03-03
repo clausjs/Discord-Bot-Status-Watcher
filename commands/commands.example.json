@@ -1,7 +1,7 @@
 [
     {
         "name": "watchbot",
-        "description": "Adds a bot to the Status Watcher's list of bots to watch.",
+        "description": "Adds/Edits a bot in the Status Watcher's watched bots.",
         "type": 1,
         "options": [
             {
